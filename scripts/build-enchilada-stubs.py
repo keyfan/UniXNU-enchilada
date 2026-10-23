@@ -20,7 +20,7 @@ source.write_text(
     'void native_legacy_display_probe(void) { }\n')
 obj = out / 'enchilada-stubs.o'
 subprocess.run(['xcrun', 'clang', '-target', 'arm64-apple-ios17.0', '-O2',
-                '-Werror', '-c', str(source), '-o', str(obj)], check=True)
+                '-Werror', '-Wno-incompatible-sysroot', '-c', str(source), '-o', str(obj)], check=True)
 archive = out / 'libEnchiladaStubs.a'
 archive.unlink(missing_ok=True)
 subprocess.run(['xcrun', 'ar', 'rcs', str(archive), str(obj)], check=True)
