@@ -13,9 +13,12 @@ CONFIG_XNU_NATIVE_AES=y
 CONFIG_XNU_TRUST_CACHE_RUNTIME=y
 CONFIG_XNU_SOURCE_MOCKFS=y
 CONFIG_XNU_NATIVE_CS_HASH_CACHE=y
-CONFIG_XNU_VERIFIED_ROOT_PROBE=y
-CONFIG_XNU_OWNER_ROOT_AUDIT=y
-CONFIG_XNU_OWNER_ROOT_TRUST=y
+# owner-root 信任链（TRUST→AUDIT→PROBE→NATIVE_VIRTIO_BLOCK）在 verified block 未就绪时
+# 被 build-xnu-4k-baseline.sh 拒绝（"Owner root acceptance requires..."）；首启关闭，
+# P6 补齐 VirtIO verified 归档与 interface-audit 鉴定后整链打开。
+# CONFIG_XNU_VERIFIED_ROOT_PROBE=y
+# CONFIG_XNU_OWNER_ROOT_AUDIT=y
+# CONFIG_XNU_OWNER_ROOT_TRUST=y
 # CONFIG_XNU_ENCHILADA_PMGR=y        # P6: SDM845 PMGR port (sheng has CONFIG_XNU_SHENG_PMGR + build-sheng-platform-power.py).
                                      # Required before setting native-ufs-root=1 on the kernel command line.
 CONFIG_XNU_OWNER_CACHE_MOUNT=y
