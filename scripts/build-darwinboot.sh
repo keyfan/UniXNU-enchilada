@@ -49,19 +49,29 @@ DARWIN_INF=drivers/DarwinBoot/DarwinBootPkg/Driver/DarwinBoot.inf
 [ -f "$TREE/package/UniXNUPkg/UniXNUPkg.dsc" ] || { echo "error: no UniXNUPkg.dsc" >&2; exit 1; }
 [ -f "$TREE/$DARWIN_INF" ] || { echo "error: $DARWIN_INF not found" >&2; exit 1; }
 
-# CLANGPDB toolchain calls $CLANG_BIN/llvm-lib and $CLANG_BIN/lld-link. macOS system clang
-# has neither; Homebrew splits llvm and lld into separate kegs. Merge both into PATH.
+# CLANGPDB toolchain calls $CLANG_BIN/{clang,llvm-lib,lld-link} by absolute path.
+# macOS Homebrew splits llvm and lld into separate kegs; build a merged bin dir of symlinks.
 BREW_LLVM="$(brew --prefix llvm 2>/dev/null)/bin"
 BREW_LLD="$(brew --prefix lld 2>/dev/null)/bin"
-if [ -x "$BREW_LLVM/llvm-lib" ]; then
-  CLANG_BIN="$BREW_LLVM/"
-elif [ -z "${CLANG_BIN:-}" ]; then
-  CLANG=$(command -v clang) || { echo "error: clang not found" >&2; exit 1; }
-  CLANG_BIN=$(dirname "$CLANG")/
+MERGED_BIN=$BUILD_DIR/toolchain-bin
+mkdir -p "$MERGED_BIN"
+if [ -d "$BREW_LLVM" ]; then
+  for tool in "$BREW_LLVM"/*; do ln -sf "$tool" "$MERGED_BIN/" 2>/dev/null; done
 fi
+if [ -d "$BREW_LLD" ]; then
+  for tool in "$BREW_LLD"/*; do ln -sf "$tool" "$MERGED_BIN/" 2>/dev/null; done
+fi
+# ensure critical names exist (some kegs use llvm-lld-link naming)
+[ -e "$MERGED_BIN/lld-link" ] || [ -e "$BREW_LLD/lld-link" ] || [ -e "$BREW_LLVM/lld-link" ] || {
+  # try alternate locations
+  for alt in "$(brew --prefix lld 2>/dev/null)/bin/lld" "$(command -v lld 2>/dev/null)"; do
+    [ -x "$alt" ] && ln -sf "$alt" "$MERGED_BIN/lld-link" && break
+  done
+}
+CLANG_BIN="$MERGED_BIN/"
 export CLANG_BIN
-export PATH="$BREW_LLVM:$BREW_LLD:$PATH"
-echo "CLANG_BIN=$CLANG_BIN  PATH+= $BREW_LLVM : $BREW_LLD"
+export PATH="$MERGED_BIN:$PATH"
+echo "CLANG_BIN=$CLANG_BIN  tools: $(ls "$MERGED_BIN" | tr '\n' ' ')"
 
 export WORKSPACE=$BUILD_DIR
 # PACKAGES_PATH: UniXNUPkg dir, the UniXNU root (drivers/), and edk2 root.
