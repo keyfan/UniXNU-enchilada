@@ -21,7 +21,18 @@ else
 fi
 
 TARGET=${1:-DEBUG}
-EDK2=${UNIXNU_EDK2:-$TREE/package/Mu_Basecore}
+# The edk2 (mu_basecore) tree is fetched by `unixnu fetch` into out/<device>/tree/refer/edk2/
+# and also may live at package/Mu_Basecore. Check the known locations.
+EDK2=""
+for candidate in \
+  "${UNIXNU_EDK2:-}" \
+  "$TREE/out/enchilada/tree/refer/edk2" \
+  "$TREE/out/"*/tree/refer/edk2 \
+  "$TREE/package/Mu_Basecore"; do
+  [ -n "$candidate" ] && [ -f "$candidate/MdePkg/MdePkg.dec" ] && { EDK2=$candidate; break; }
+done
+[ -n "$EDK2" ] || { echo "error: no edk2 tree found (set UNIXNU_EDK2 or run unixnu fetch first)" >&2; exit 1; }
+echo "edk2: $EDK2"
 ARCH=AARCH64
 TOOLCHAIN=CLANGPDB
 JOBS=${JOBS:-$(getconf _NPROCESSORS_ONLN 2>/dev/null || echo 2)}
@@ -39,7 +50,12 @@ fi
 export CLANG_BIN
 
 export WORKSPACE=$BUILD_DIR
-export PACKAGES_PATH=$TREE/package:$TREE:$EDK2
+# PACKAGES_PATH: UniXNUPkg directory, the tree root (for drivers/), and the edk2 root.
+# When edk2 is in tree/refer/edk2, the tree root is tree/'s parent... actually modules are
+# symlinked into the tree; the INF path drivers/DarwinBoot resolves against the tree root.
+EDK2_PARENT=$(dirname "$EDK2")
+TREE_ROOT=$(dirname "$EDK2_PARENT")  # tree/refer/edk2 -> tree/
+export PACKAGES_PATH=$TREE/package:$TREE_ROOT:$EDK2
 export EDK_TOOLS_PATH=$EDK2/BaseTools
 export CONF_PATH=$BUILD_DIR/Build/Conf
 export PYTHON_COMMAND=${PYTHON_COMMAND:-python3}
