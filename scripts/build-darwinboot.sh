@@ -54,6 +54,13 @@ if [ -z "${CLANG_BIN:-}" ]; then
   CLANG_BIN=$(dirname "$CLANG")/
 fi
 export CLANG_BIN
+# EDK II CLANGPDB also needs llvm-lib/llvm-nm/llvm-objcopy in PATH (keg-only Homebrew LLVM).
+LLVM_BIN=$(dirname "$(command -v llvm-lib 2>/dev/null || echo "${CLANG_BIN}llvm-lib")")
+if [ -x "$(brew --prefix llvm 2>/dev/null)/bin/llvm-lib" ]; then
+  LLVM_BIN="$(brew --prefix llvm)/bin"
+fi
+export PATH="$LLVM_BIN:$PATH"
+echo "llvm tools: $LLVM_BIN"
 
 export WORKSPACE=$BUILD_DIR
 # PACKAGES_PATH: UniXNUPkg dir, the UniXNU root (drivers/), and edk2 root.
