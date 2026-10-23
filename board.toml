@@ -145,7 +145,10 @@ BUILDID_STRING = "enchilada-research"
 [payload]
 volume = "ONEPLUS6ESP"
 size_mib = 192
-loader = "firmware"
+# "firmware" = Mu-Silicium FV embeds DarwinBoot (U-2 path). We run Renegade UEFI, so use the
+# standalone driver instead: the payload step adds [[driver]] path = "Payloads/DarwinBoot.efi"
+# and CI injects the built DarwinBoot.efi into the FAT volume.
+loader = "DarwinBoot"
 title = "enchilada first boot: source 4K XNU to console"
 dram_size = "0x180000000"            # 6 GiB unit, confirmed (MemTotal 5765952 kB on this phone)
 skip_setup_tool = "scripts/seed-data-skip-setup.py"   # used by --skip-setup
