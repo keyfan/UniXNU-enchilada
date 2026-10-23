@@ -8,8 +8,8 @@ CONFIG_XNU_ARM_DT_PLATFORM=y
 CONFIG_XNU_ARMCPU=y
 CONFIG_XNU_NATIVE_UFS=y
 CONFIG_XNU_NATIVE_AES=y
-CONFIG_XNU_NATIVE_VIRTIO_BLOCK=y
-CONFIG_XNU_NATIVE_RAM_BLOCK=y
+# CONFIG_XNU_NATIVE_VIRTIO_BLOCK=y     # P6: 需 pre_build 的 storage ABI 鉴定（interface-audit.json）
+# CONFIG_XNU_NATIVE_RAM_BLOCK=y        # P6: 同上（Data seed 稀疏块驱动）
 CONFIG_XNU_TRUST_CACHE_RUNTIME=y
 CONFIG_XNU_SOURCE_MOCKFS=y
 CONFIG_XNU_NATIVE_CS_HASH_CACHE=y
@@ -35,8 +35,10 @@ CONFIG_XNU_CRYPTO_BOOTSTRAP="prelinked"
 # Must match the volume UUID of the Data seed you supply to `unixnu build payload --data-ramdisk`.
 # If you build/adopt a different seed, update this value together with it.
 CONFIG_XNU_OWNER_DATA_VOLUME_UUID="18AB5557-DC2D-469B-8758-855E60F5B0DF"
-CONFIG_XNU_NATIVE_VIRTIO_BLOCK_ARCHIVE="{tree}/build/native-virtio-block-verified-bundle/libNativeVirtioBlock.a"
-CONFIG_XNU_VERIFIED_ROOT_ARCHIVE="{tree}/build/verified-root-os-xnu-bundle/libVerifiedRootProbe.a"
+# 首启先不链接 verified 归档（生产环节在 prelink/payload，pinned bundle 未生成时链接器会失败）。
+# 需要 owner-root 路径时再打开，并按 unixnu.com/building 的 pre_build 节补齐 bundle。
+# CONFIG_XNU_NATIVE_VIRTIO_BLOCK_ARCHIVE="{tree}/build/native-virtio-block-verified-bundle/libNativeVirtioBlock.a"
+# CONFIG_XNU_VERIFIED_ROOT_ARCHIVE="{tree}/build/verified-root-os-xnu-bundle/libVerifiedRootProbe.a"
 CONFIG_XNU_EXTRA_LD_ARCHIVES=""
 CONFIG_XNU_NATIVE_MOBILE_DISPLAY=n
 CONFIG_XNU_ARMVIRT_PLATFORM=n
