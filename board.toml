@@ -41,9 +41,8 @@ windows = [
 [kernel]
 defconfig = "enchilada_defconfig"
 # Archive builders of the kernel step, in order. Each is a script of the build tree with its arguments.
-# build-sheng-platform-power.py is the sheng PMGR (sheng-pmgr=2); the SDM845 equivalent is a port
-# item (P6) — add "build-enchilada-platform-power.py" here once it exists. Until then do not set
-# native-ufs-root=1 on the command line (the payload step refuses it without a linked PMGR).
+# 首启精简集（控制台优先）：sheng 的 build-boot-progress / NativeAdreno / legacy-display 构建器
+# 依赖 kits/sheng 源码与 GMU 固件，待 P7/P8 移植对应 kit 后再加回（含 defconfig 的对应 CONFIG）。
 archives = [
   "build-corecrypto-14.py",
   "build-corecrypto-14.py --namespace",
@@ -58,12 +57,13 @@ archives = [
   "build-native-virtio-bindings.py --component NativeVirtioBlock",
   "build-mockfs-fixture.py",
   # "build-enchilada-platform-power.py",   # P6: SDM845 PMGR, required for native-ufs-root=1
-  "build-boot-progress.py",
   "build-libpthread-kernel.py",
-  "build-arm-driver.py NativeAdreno",
-  "build-native-adreno-kits.py",
-  "build-native-adreno-accelerator.py",
-  "build-native-legacy-display.py",
+  # P7/P8（需 kits/enchilada + GMU 固件）:
+  # "build-boot-progress.py",
+  # "build-arm-driver.py NativeAdreno",
+  # "build-native-adreno-kits.py",
+  # "build-native-adreno-accelerator.py",
+  # "build-native-legacy-display.py",
 ]
 
 # The prelink inputs describe the iPad7,1 21H461 kernelcache; same IPSW, so same values as sheng.
