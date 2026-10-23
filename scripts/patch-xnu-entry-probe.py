@@ -45,8 +45,10 @@ AFTER_MMU_VA = 0xfffffff0073ee370    # mov x0, #0x300000 (delta +0x314)
 PANIC_VA = 0xfffffff00797a828      # _panic
 VINFO_VA = 0xfffffff007ab2970      # _vinfo
 PANIC_CAVE_END = 0xfffffff0073ed000
-CAVE_SIZE = 0x60
-CAVES = {1: 0xfffffff0073ec500, 2: 0xfffffff0073ec560, 3: 0xfffffff0073ec5c0, 4: 0xfffffff0073ec620}
+CAVE_SIZE = 0x58
+# Shifted 0x10 earlier than sheng's layout and 8 bytes smaller per cave: the panic screen is
+# 0x9fd bytes and the padding here ends at 0xed003, so the four caves must leave >= 0x9fd.
+CAVES = {1: 0xfffffff0073ec490, 2: 0xfffffff0073ec4e8, 3: 0xfffffff0073ec540, 4: 0xfffffff0073ec598}
 TIMEBASE = 19200000
 
 PAINT = """
