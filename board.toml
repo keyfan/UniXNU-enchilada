@@ -50,8 +50,10 @@ archives = [
   "build-arm-driver.py ArmCpu",
   "build-arm-driver.py NativeAES",
   "build-native-aes-bindings.py",
-  "build-arm-driver.py NativeUfs",
+  # "build-arm-driver.py NativeUfs",   # P6: NativeUfs 编译期绑定 VerifiedRoot/BootProgress/IOBlockStorageDevice
+                                        # 原始符号（build-arm-driver.py 强制 -DNATIVE_VERIFIED_BLOCK），需整链补齐后加回
   "build-mockfs-fixture.py",
+  "build-enchilada-stubs.py",
   # "build-enchilada-platform-power.py",   # P6: SDM845 PMGR, required for native-ufs-root=1
   "build-libpthread-kernel.py",
   # P6+（payload/Data seed 需要；build-native-virtio-bindings 依赖 pre_build 产出的
