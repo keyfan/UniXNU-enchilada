@@ -27,9 +27,9 @@ CONFIG_XNU_DT_PANIC_REGION=y
 CONFIG_XNU_ZONE_PGZ_ALIGNMENT_PROBE=y
 CONFIG_XNU_NATIVE_ARCH_TIMER=y
 CONFIG_XNU_NATIVE_PAN=y
-CONFIG_XNU_BOOT_PROGRESS=y
-CONFIG_XNU_NATIVE_LEGACY_DISPLAY=y
-CONFIG_XNU_NATIVE_ADRENO=y
+# CONFIG_XNU_BOOT_PROGRESS=y            # P7: 需 kits/enchilada/BootProgress.c（对照 sheng 的 kit）
+# CONFIG_XNU_NATIVE_LEGACY_DISPLAY=y    # P8: 显示管线，对照 sheng 适配
+# CONFIG_XNU_NATIVE_ADRENO=y            # P8: GPU（a630 + GMU 固件）
 
 CONFIG_XNU_CRYPTO_BOOTSTRAP="prelinked"
 # Must match the volume UUID of the Data seed you supply to `unixnu build payload --data-ramdisk`.
