@@ -13,19 +13,19 @@ CONFIG_XNU_NATIVE_AES=y
 CONFIG_XNU_TRUST_CACHE_RUNTIME=y
 CONFIG_XNU_SOURCE_MOCKFS=y
 CONFIG_XNU_NATIVE_CS_HASH_CACHE=y
-# owner-root 信任链（TRUST→AUDIT→PROBE→NATIVE_VIRTIO_BLOCK）在 verified block 未就绪时
-# 被 build-xnu-4k-baseline.sh 拒绝（"Owner root acceptance requires..."）；首启关闭，
-# P6 补齐 VirtIO verified 归档与 interface-audit 鉴定后整链打开。
+# owner 全家链（ROOT_TRUST→CACHE_MOUNT→CACHE_STARTUP→BOOT_MANIFEST→DATA_MOUNT→UNION_SYSTEMOS）
+# 都以 verified block + owner-root 为前提（build-xnu-4k-baseline.sh 各段门控）；首启全部关闭。
+# P6 补齐 VirtIO verified 归档 + pre_build 鉴定 + XNU_OWNER_CACHE_VOLUME_UUID 后整链打开。
 # CONFIG_XNU_VERIFIED_ROOT_PROBE=y
 # CONFIG_XNU_OWNER_ROOT_AUDIT=y
 # CONFIG_XNU_OWNER_ROOT_TRUST=y
+# CONFIG_XNU_OWNER_CACHE_MOUNT=y
+# CONFIG_XNU_OWNER_CACHE_STARTUP=y
+# CONFIG_XNU_OWNER_BOOT_MANIFEST=y
+# CONFIG_XNU_OWNER_DATA_MOUNT=y
+# CONFIG_XNU_OWNER_UNION_SYSTEMOS=y
 # CONFIG_XNU_ENCHILADA_PMGR=y        # P6: SDM845 PMGR port (sheng has CONFIG_XNU_SHENG_PMGR + build-sheng-platform-power.py).
                                      # Required before setting native-ufs-root=1 on the kernel command line.
-CONFIG_XNU_OWNER_CACHE_MOUNT=y
-CONFIG_XNU_OWNER_CACHE_STARTUP=y
-CONFIG_XNU_OWNER_BOOT_MANIFEST=y
-CONFIG_XNU_OWNER_DATA_MOUNT=y
-CONFIG_XNU_OWNER_UNION_SYSTEMOS=y
 CONFIG_XNU_DT_PANIC_REGION=y
 CONFIG_XNU_ZONE_PGZ_ALIGNMENT_PROBE=y
 CONFIG_XNU_NATIVE_ARCH_TIMER=y
