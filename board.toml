@@ -149,7 +149,11 @@ loader = "firmware"
 title = "enchilada first boot: source 4K XNU to console"
 dram_size = "0x180000000"            # 6 GiB unit, confirmed (MemTotal 5765952 kB on this phone)
 skip_setup_tool = "scripts/seed-data-skip-setup.py"   # used by --skip-setup
-panic_screen = true                  # patch panic() screen output into the payload copy of the kernel
+# panic_screen needs scripts/patch-xnu-entry-probe.py (published only in UniXNU-sheng, with
+# sheng-specific symbol VAs: our kernel.macho has _panic@0xfffffff00797a828,
+# _start_first_cpu@0xfffffff0073ee05c — a port is P7 work). Disabled so payload builds;
+# first bring-up relies on loader output + boot behaviour instead of a panic banner.
+panic_screen = false
 # The original static/System trust caches of the 21H461 image (same IPSW as sheng).
 trust_cache_sha256 = [
   "7416ca4f8377146626bb284e2133c76bee6cb4e3ee0af5d648b186235a7323a7",
