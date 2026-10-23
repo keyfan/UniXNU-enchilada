@@ -49,18 +49,17 @@ DARWIN_INF=drivers/DarwinBoot/DarwinBootPkg/Driver/DarwinBoot.inf
 [ -f "$TREE/package/UniXNUPkg/UniXNUPkg.dsc" ] || { echo "error: no UniXNUPkg.dsc" >&2; exit 1; }
 [ -f "$TREE/$DARWIN_INF" ] || { echo "error: $DARWIN_INF not found" >&2; exit 1; }
 
-if [ -z "${CLANG_BIN:-}" ]; then
+# CLANGPDB toolchain calls $CLANG_BIN/llvm-lib. macOS system clang (/usr/bin/clang) has no
+# llvm-lib; force CLANG_BIN to Homebrew LLVM which ships the full toolchain.
+if brew --prefix llvm >/dev/null 2>&1 && [ -x "$(brew --prefix llvm)/bin/llvm-lib" ]; then
+  CLANG_BIN="$(brew --prefix llvm)/bin/"
+elif [ -z "${CLANG_BIN:-}" ]; then
   CLANG=$(command -v clang) || { echo "error: clang not found" >&2; exit 1; }
   CLANG_BIN=$(dirname "$CLANG")/
 fi
 export CLANG_BIN
-# EDK II CLANGPDB also needs llvm-lib/llvm-nm/llvm-objcopy in PATH (keg-only Homebrew LLVM).
-LLVM_BIN=$(dirname "$(command -v llvm-lib 2>/dev/null || echo "${CLANG_BIN}llvm-lib")")
-if [ -x "$(brew --prefix llvm 2>/dev/null)/bin/llvm-lib" ]; then
-  LLVM_BIN="$(brew --prefix llvm)/bin"
-fi
-export PATH="$LLVM_BIN:$PATH"
-echo "llvm tools: $LLVM_BIN"
+export PATH="${CLANG_BIN}:$PATH"
+echo "CLANG_BIN=$CLANG_BIN"
 
 export WORKSPACE=$BUILD_DIR
 # PACKAGES_PATH: UniXNUPkg dir, the UniXNU root (drivers/), and edk2 root.
