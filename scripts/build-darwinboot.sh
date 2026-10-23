@@ -56,12 +56,8 @@ fi
 export CLANG_BIN
 
 export WORKSPACE=$BUILD_DIR
-# PACKAGES_PATH: UniXNUPkg directory, the tree root (for drivers/), and the edk2 root.
-# When edk2 is in tree/refer/edk2, the tree root is tree/'s parent... actually modules are
-# symlinked into the tree; the INF path drivers/DarwinBoot resolves against the tree root.
-EDK2_PARENT=$(dirname "$EDK2")
-TREE_ROOT=$(dirname "$EDK2_PARENT")  # tree/refer/edk2 -> tree/
-export PACKAGES_PATH=$TREE/package:$TREE_ROOT:$EDK2
+# PACKAGES_PATH: UniXNUPkg dir, the UniXNU root (drivers/), and edk2 root.
+export PACKAGES_PATH=$TREE/package:$TREE:$EDK2
 export EDK_TOOLS_PATH=$EDK2/BaseTools
 export CONF_PATH=$BUILD_DIR/Build/Conf
 export PYTHON_COMMAND=${PYTHON_COMMAND:-python3}
