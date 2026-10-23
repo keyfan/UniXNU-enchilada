@@ -21,17 +21,23 @@ else
 fi
 
 TARGET=${1:-DEBUG}
-# The edk2 (mu_basecore) tree is fetched by `unixnu fetch` into out/<device>/tree/refer/edk2/
-# and also may live at package/Mu_Basecore. Check the known locations.
+# The edk2 (mu_basecore) tree is fetched by `unixnu fetch` into out/feeds/ as a git clone
+# and symlinked to out/<device>/tree/refer/edk2. Search broadly.
 EDK2=""
 for candidate in \
   "${UNIXNU_EDK2:-}" \
   "$TREE/out/enchilada/tree/refer/edk2" \
   "$TREE/out/"*/tree/refer/edk2 \
+  "$TREE/out/feeds/"*mu_basecore* \
+  "$TREE/out/feeds/"*edk2* \
   "$TREE/package/Mu_Basecore"; do
   [ -n "$candidate" ] && [ -f "$candidate/MdePkg/MdePkg.dec" ] && { EDK2=$candidate; break; }
 done
-[ -n "$EDK2" ] || { echo "error: no edk2 tree found (set UNIXNU_EDK2 or run unixnu fetch first)" >&2; exit 1; }
+if [ -z "$EDK2" ]; then
+  echo "edk2 not in known paths, searching out/ ..."
+  EDK2=$(find "$TREE/out" -name "MdePkg.dec" -path "*/MdePkg/*" 2>/dev/null | head -1 | xargs dirname | xargs dirname)
+fi
+[ -n "$EDK2" ] && [ -f "$EDK2/MdePkg/MdePkg.dec" ] || { echo "error: no edk2 tree found" >&2; find "$TREE/out" -name "MdePkg.dec" 2>/dev/null | head -5; exit 1; }
 echo "edk2: $EDK2"
 ARCH=AARCH64
 TOOLCHAIN=CLANGPDB
