@@ -206,7 +206,7 @@ text_fixups = [
 [payload.adt]
 tool = "scripts/make-enchilada-adt.py"
 chip_id = "208"                      # software identity seed (207 is sheng's); pairs with --unique-chip-id
-owned_memory_size = "0x130000000"    # DarwinBoot contiguous window; TODO: tune with dram_size
+owned_memory_size = "0x10000000"    # DarwinBoot contiguous window (256MB min). Renegade UEFI cannot provide 4.875GB contiguous.
 root_match_volume_uuid = "04769D26-2CA0-4825-B443-E2E5F88300F2"   # OS volume UUID of iPad7,1 21H461, same as sheng
 cpu_regs = "0,0x100,0x200,0x300,0x400,0x500,0x600,0x700"   # measured from the stock DTB (cpu@0..cpu@700, Affinity1); 4x A75 + 4x A55
 packed_data_ramdisk = true
