@@ -116,7 +116,8 @@ PY
 echo "== edk2 build DarwinBoot ($TARGET $TOOLCHAIN)"
 build -p package/UniXNUPkg/UniXNUPkg.dsc -m "$DARWIN_INF" -a "$ARCH" -b "$TARGET" -t "$TOOLCHAIN" -n "$JOBS"
 
-BIN=$BUILD_DIR/Build/DarwinBoot/${TARGET}_${TOOLCHAIN}/$ARCH/DarwinBoot.efi
+BIN=$BUILD_DIR/Build/UniXNU/${TARGET}_${TOOLCHAIN}/$ARCH/DarwinBoot.efi
+[ -f "$BIN" ] || BIN=$BUILD_DIR/Build/DarwinBoot/${TARGET}_${TOOLCHAIN}/$ARCH/DarwinBoot.efi
 OUT=${UNIXNU_DARWINBOOT_OUT:-$TREE/out/darwinboot}
 mkdir -p "$OUT"
 cp "$BIN" "$OUT/"
