@@ -161,7 +161,7 @@ panic_screen = true
 # Ladder (25 bl calls in _arm_init): 5=cpu_data_init 6=PE_init_platform 7=configure_timer_apple_regs
 # 12=SecureDTLookupEntry 14=platform_stall_panic_or_spin 18=thread_bootstrap 23=kernel_startup_bootstrap
 entry_probe_reset_delay = 6
-entry_probe_reset_after = "_thread_bootstrap"
+entry_probe_reset_after = "_kernel_debug_string_early"
 entry_probe_reset_in = "_arm_init"
 entry_probe_reset_occurrence = 1
 # The original static/System trust caches of the 21H461 image (same IPSW as sheng).
