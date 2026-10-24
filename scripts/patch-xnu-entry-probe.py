@@ -402,6 +402,13 @@ def main():
             data[file_offset(CAVES[stage]):file_offset(CAVES[stage]) + len(code)] = code
     for site, stage, _ in sites:
         struct.pack_into('<I', data, file_offset(site), branch(site, CAVES[stage]))
+    # SDM845 hardware workaround: `bl pmap_cpu_data_init` inside cpu_init (0x73e138c) accesses
+    # Apple Silicon debug registers (arm_debug_set64) that don't exist on Kryo 385. NOP it out
+    # so cpu_init skips debug-state setup and the kernel can continue past _arm_init.
+    NOP_SITE = 0xfffffff0073e138c
+    if word(NOP_SITE) == 0x97fff29e:   # bl pmap_cpu_data_init
+        struct.pack_into('<I', data, file_offset(NOP_SITE), 0xD503201F)  # nop
+        description += ', nop bl pmap_cpu_data_init (SDM845 debug workaround)'
     if args.panic_screen:
         # Right after the last probe cave in use, so the padding is shared as tightly as possible.
         PANIC_CAVE = max(CAVES[stage] for _, stage, _ in sites) + CAVE_SIZE
