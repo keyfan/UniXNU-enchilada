@@ -156,14 +156,8 @@ skip_setup_tool = "scripts/seed-data-skip-setup.py"   # used by --skip-setup
 # our kernel.macho (2026-10-23): entry=0xfffffff0073ec488, _panic=0xfffffff00797a828,
 # MMU=0xfffffff0073ee350. Stage bars + panic text on the framebuffer.
 panic_screen = true
-# Stage 4 binary-search probe: reset 6s after the Nth call to entry_probe_reset_after inside
-# entry_probe_reset_in. Reboot = the CPU got past that call; no reboot = died at/before it.
-# Ladder (25 bl calls in _arm_init): 5=cpu_data_init 6=PE_init_platform 7=configure_timer_apple_regs
-# 12=SecureDTLookupEntry 14=platform_stall_panic_or_spin 18=thread_bootstrap 23=kernel_startup_bootstrap
-entry_probe_reset_delay = 6
-entry_probe_reset_after = "_cpu_init"
-entry_probe_reset_in = "_arm_init"
-entry_probe_reset_occurrence = 1
+# No reset probe for this run: let XNU run as far as it can and show the panic screen
+# if it dies. Stage bars still painted at entry (blue) and MMU enable (magenta).
 # The original static/System trust caches of the 21H461 image (same IPSW as sheng).
 trust_cache_sha256 = [
   "7416ca4f8377146626bb284e2133c76bee6cb4e3ee0af5d648b186235a7323a7",
