@@ -157,7 +157,7 @@ skip_setup_tool = "scripts/seed-data-skip-setup.py"   # used by --skip-setup
 # MMU=0xfffffff0073ee350. Stage bars + panic text on the framebuffer.
 panic_screen = true
 entry_probe_reset_delay = 6
-entry_probe_reset_after = "_sched_init"
+entry_probe_reset_after = "_processor_bootstrap"
 entry_probe_reset_in = "_kernel_bootstrap"
 entry_probe_reset_occurrence = 1
 # The original static/System trust caches of the 21H461 image (same IPSW as sheng).
