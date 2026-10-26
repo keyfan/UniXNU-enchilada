@@ -40,8 +40,8 @@ windows = [
 
 [kernel]
 defconfig = "enchilada_defconfig"
-config_fragments = ["arch:configs/common.config", "soc:configs/sm8550.config", "os:configs/ipados.config"]
-patch_series = ["arch:patches/xnu/series", "soc:patches/xnu/series", "os:patches/xnu/series", "device:patches/xnu/series"]
+config_fragments = ["arch:configs/common.config", "os:configs/ipados.config"]
+patch_series = ["arch:patches/xnu/series", "os:patches/xnu/series", "device:patches/xnu/series"]
 # Archive builders of the kernel step, in order. Each is a script of the build tree with its arguments.
 # 首启精简集（控制台优先）：sheng 的 build-boot-progress / NativeAdreno / legacy-display 构建器
 # 依赖 kits/sheng 源码与 GMU 固件，待 P7/P8 移植对应 kit 后再加回（含 defconfig 的对应 CONFIG）。
