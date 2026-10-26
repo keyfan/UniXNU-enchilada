@@ -1,16 +1,15 @@
 From: enchilada porting
-Subject: [PATCH] no-op placeholder for enchilada baseline
+Subject: [PATCH] add enchilada baseline marker file
 
 ---
- README.md | 1 +
+ .enchilada_baseline | 1 +
  1 file changed, 1 insertion(+)
+ create mode 100644 .enchilada_baseline
 
-diff --git a/README.md b/README.md
-index 1234567..89abcde 100644
---- a/README.md
-+++ b/README.md
-@@ -1,3 +1,4 @@
-  XNU
-+ <!-- enchilada baseline -->
-  
-  The XNU kernel
+diff --git a/.enchilada_baseline b/.enchilada_baseline
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/.enchilada_baseline
+@@ -0,0 +1 @@
++# enchilada baseline marker
