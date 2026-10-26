@@ -164,7 +164,7 @@ trust_cache_sha256 = [
 ]
 kernel_args = [
   "-v",
-  # "serial=3",  # 注释掉串口输出，改用 Framebuffer 控制台
+  "serial=3",
   "debug=0x14e",
   "kt_fixed_zones=120",
   "offline-legacy-register=1",
