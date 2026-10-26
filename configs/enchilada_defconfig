@@ -11,7 +11,7 @@ CONFIG_XNU_NATIVE_AES=y
 # CONFIG_XNU_NATIVE_VIRTIO_BLOCK=y     # P6: 需 pre_build 的 storage ABI 鉴定（interface-audit.json）
 # CONFIG_XNU_NATIVE_RAM_BLOCK=y        # P6: 同上（Data seed 稀疏块驱动）
 CONFIG_XNU_TRUST_CACHE_RUNTIME=y
-CONFIG_XNU_SOURCE_MOCKFS=n
+CONFIG_XNU_SOURCE_MOCKFS=y
 CONFIG_XNU_NATIVE_CS_HASH_CACHE=y
 # owner 全家链（ROOT_TRUST→CACHE_MOUNT→CACHE_STARTUP→BOOT_MANIFEST→DATA_MOUNT→UNION_SYSTEMOS）
 # 都以 verified block + owner-root 为前提（build-xnu-4k-baseline.sh 各段门控）；首启全部关闭。
