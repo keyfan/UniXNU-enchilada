@@ -48,7 +48,7 @@ archives = [
   "build-corecrypto-14.py --namespace",
   "build-arm-driver.py ArmDTPlatform",
   "build-arm-driver.py ArmCpu",
-  "build-arm-driver.py NativeAES",
+  "component:SoftwareAES",
   "build-mockfs-fixture.py",
   "build-native-aes-bindings.py --objects-dir build/native-aes",
   # "build-arm-driver.py NativeUfs",   # P6: NativeUfs 编译期绑定 VerifiedRoot/BootProgress/IOBlockStorageDevice
