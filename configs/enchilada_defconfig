@@ -15,6 +15,7 @@ CONFIG_XNU_DT_PANIC_REGION=y
 CONFIG_XNU_NATIVE_ARCH_TIMER=y
 CONFIG_XNU_NATIVE_PAN=y
 
+CONFIG_XNU_EXTRA_LD_ARCHIVES="-Wl,-force_load,{tree}/build/mockfs-fixture/libmockfs_fixture.a -Wl,-force_load,{tree}/build/sheng-platform-power/libShengPlatformPower.a"
 CONFIG_XNU_CRYPTO_BOOTSTRAP="prelinked"
 
 # 首启最小集：不链接 verified 归档（生产环节在 prelink/payload）
