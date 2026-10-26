@@ -42,6 +42,6 @@ CONFIG_XNU_OWNER_DATA_VOLUME_UUID="18AB5557-DC2D-469B-8758-855E60F5B0DF"
 # 需要 owner-root 路径时再打开，并按 unixnu.com/building 的 pre_build 节补齐 bundle。
 # CONFIG_XNU_NATIVE_VIRTIO_BLOCK_ARCHIVE="{tree}/build/native-virtio-block-verified-bundle/libNativeVirtioBlock.a"
 # CONFIG_XNU_VERIFIED_ROOT_ARCHIVE="{tree}/build/verified-root-os-xnu-bundle/libVerifiedRootProbe.a"
-CONFIG_XNU_EXTRA_LD_ARCHIVES="{tree}/build/enchilada-stubs/libEnchiladaStubs.a"
+CONFIG_XNU_EXTRA_LD_ARCHIVES="{tree}/build/enchilada-stubs/libEnchiladaStubs.a -Wl,-force_load,{tree}/build/mockfs-fixture/libmockfs_fixture.a"
 CONFIG_XNU_NATIVE_MOBILE_DISPLAY=n
 CONFIG_XNU_ARMVIRT_PLATFORM=n
