@@ -48,10 +48,6 @@ archives = [
   "build-corecrypto-14.py --namespace",
   "build-arm-driver.py ArmDTPlatform",
   "build-arm-driver.py ArmCpu",
-  "build-arm-driver.py NativeAES",
-  "build-native-aes-bindings.py",
-  "build-mockfs-fixture.py",
-  "build-sheng-platform-power.py",
   # "build-arm-driver.py NativeUfs",   # P6: NativeUfs 编译期绑定 VerifiedRoot/BootProgress/IOBlockStorageDevice
                                         # 原始符号（build-arm-driver.py 强制 -DNATIVE_VERIFIED_BLOCK），需整链补齐后加回
   "build-enchilada-stubs.py",
