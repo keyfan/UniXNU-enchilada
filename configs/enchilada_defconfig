@@ -1,20 +1,30 @@
 # Kernel configuration of the enchilada image. CONFIG_XNU_<NAME> becomes XNU_<NAME> for the kernel build.
-# Adapted from UniXNU-sheng configs/sheng_defconfig (BSD-2-Clause-Patent).
+# Adapted from johnpanos/UniXNU-fajita configs/fajita_defconfig (SDM845, OnePlus 6T).
 
 CONFIG_XNU_BUILD_ARCHIVES=y
-CONFIG_XNU_EXTRA_LD_ARCHIVES=""
 CONFIG_XNU_SOURCE_CORECRYPTO14=y
 CONFIG_XNU_SOURCE_PTHREAD=y
 CONFIG_XNU_ARM_DT_PLATFORM=y
 CONFIG_XNU_ARMCPU=y
-# CONFIG_XNU_NATIVE_UFS=y            # P6: 需 VerifiedRoot + BootProgress kit + 存储基类原始绑定整链
-# CONFIG_XNU_NATIVE_VIRTIO_BLOCK=y     # P6: 需 pre_build 的 storage ABI 鉴定（interface-audit.json）
-# CONFIG_XNU_NATIVE_RAM_BLOCK=y        # P6: 同上（Data seed 稀疏块驱动）
+CONFIG_XNU_NATIVE_AES=y
+CONFIG_XNU_SHENG_PMGR=y
 CONFIG_XNU_TRUST_CACHE_RUNTIME=y
+CONFIG_XNU_SOURCE_MOCKFS=y
 CONFIG_XNU_NATIVE_CS_HASH_CACHE=y
-# owner 全家链（ROOT_TRUST→CACHE_MOUNT→CACHE_STARTUP→BOOT_MANIFEST→DATA_MOUNT→UNION_SYSTEMOS）
-# 都以 verified block + owner-root 为前提（build-xnu-4k-baseline.sh 各段门控）；首启全部关闭。
-# P6 补齐 VirtIO verified 归档 + pre_build 鉴定 + XNU_OWNER_CACHE_VOLUME_UUID 后整链打开。
+CONFIG_XNU_DT_PANIC_REGION=y
+CONFIG_XNU_NATIVE_ARCH_TIMER=y
+CONFIG_XNU_NATIVE_PAN=y
+
+CONFIG_XNU_CRYPTO_BOOTSTRAP="prelinked"
+
+# 首启最小集：不链接 verified 归档（生产环节在 prelink/payload）
+# CONFIG_XNU_NATIVE_VIRTIO_BLOCK_ARCHIVE="{tree}/build/native-virtio-block-verified-bundle/libNativeVirtioBlock.a"
+# CONFIG_XNU_VERIFIED_ROOT_ARCHIVE="{tree}/build/verified-root-os-xnu-bundle/libVerifiedRootProbe.a"
+
+# P6/P7/P8 待移植
+# CONFIG_XNU_NATIVE_UFS=y
+# CONFIG_XNU_NATIVE_VIRTIO_BLOCK=y
+# CONFIG_XNU_NATIVE_RAM_BLOCK=y
 # CONFIG_XNU_VERIFIED_ROOT_PROBE=y
 # CONFIG_XNU_OWNER_ROOT_AUDIT=y
 # CONFIG_XNU_OWNER_ROOT_TRUST=y
@@ -23,23 +33,9 @@ CONFIG_XNU_NATIVE_CS_HASH_CACHE=y
 # CONFIG_XNU_OWNER_BOOT_MANIFEST=y
 # CONFIG_XNU_OWNER_DATA_MOUNT=y
 # CONFIG_XNU_OWNER_UNION_SYSTEMOS=y
-# CONFIG_XNU_ENCHILADA_PMGR=y        # P6: SDM845 PMGR port (sheng has CONFIG_XNU_SHENG_PMGR + build-sheng-platform-power.py).
-                                     # Required before setting native-ufs-root=1 on the kernel command line.
-CONFIG_XNU_DT_PANIC_REGION=y
-CONFIG_XNU_ZONE_PGZ_ALIGNMENT_PROBE=y
-CONFIG_XNU_NATIVE_ARCH_TIMER=y
-CONFIG_XNU_NATIVE_PAN=y
-# CONFIG_XNU_BOOT_PROGRESS=y            # P7: 需 kits/enchilada/BootProgress.c（对照 sheng 的 kit）
-# CONFIG_XNU_NATIVE_LEGACY_DISPLAY=y    # P8: 显示管线，对照 sheng 适配
-# CONFIG_XNU_NATIVE_ADRENO=y            # P8: GPU（a630 + GMU 固件）
+# CONFIG_XNU_BOOT_PROGRESS=y
+# CONFIG_XNU_NATIVE_LEGACY_DISPLAY=y
 
-CONFIG_XNU_CRYPTO_BOOTSTRAP="prelinked"
-# Must match the volume UUID of the Data seed you supply to `unixnu build payload --data-ramdisk`.
-# If you build/adopt a different seed, update this value together with it.
-CONFIG_XNU_OWNER_DATA_VOLUME_UUID="18AB5557-DC2D-469B-8758-855E60F5B0DF"
-# 首启先不链接 verified 归档（生产环节在 prelink/payload，pinned bundle 未生成时链接器会失败）。
-# 需要 owner-root 路径时再打开，并按 unixnu.com/building 的 pre_build 节补齐 bundle。
-# CONFIG_XNU_NATIVE_VIRTIO_BLOCK_ARCHIVE="{tree}/build/native-virtio-block-verified-bundle/libNativeVirtioBlock.a"
-# CONFIG_XNU_VERIFIED_ROOT_ARCHIVE="{tree}/build/verified-root-os-xnu-bundle/libVerifiedRootProbe.a"
 CONFIG_XNU_NATIVE_MOBILE_DISPLAY=n
 CONFIG_XNU_ARMVIRT_PLATFORM=n
+CONFIG_XNU_OWNER_DATA_VOLUME_UUID="18AB5557-DC2D-469B-8758-855E60F5B0DF"
