@@ -1,17 +1,7 @@
 #!/usr/bin/env python3
-"""Patch build-xnu-4k-baseline.sh to always link the mockfs fixture.
-
-The archive-linking section is gated by `if [ CORECRYPTO=1 ] && [ BOOTSTRAP=0 ]`.
-During the first pass (BOOTSTRAP=1), archives aren't built yet so the gate is
-correct. But during the final pass (BOOTSTRAP=0), the mockfs fixture must be
-linked. This script adds the mockfs linking OUTSIDE the gate so it works
-regardless of BOOTSTRAP mode.
-"""
+"""Patch ALL copies of build-xnu-4k-baseline.sh to link the mockfs fixture."""
 import sys
 from pathlib import Path
-
-script = Path('scripts/build-xnu-4k-baseline.sh')
-text = script.read_text()
 
 needle = '''  EXTRA_MAKE_ARGS+=("LD_KERNEL_ARCHIVES=$KERNEL_EXTRA_ARCHIVES")
   EXTRA_MAKE_ARGS+=("XNU_EXTERNAL_KERNEL_ARCHIVES=$KERNEL_ARCHIVE_DEPENDENCIES")
@@ -38,13 +28,24 @@ if [ -f "$ROOT/build/mockfs-fixture/libmockfs_fixture.a" ]; then
   echo "mockfs fixture linked: $MOCKFS_LINK"
 fi'''
 
-if needle in text:
-    text = text.replace(needle, insert, 1)
-    script.write_text(text)
-    print("PATCHED OK: mockfs linking added outside BOOTSTRAP gate")
-else:
+found = 0
+for script in Path('.').rglob('build-xnu-4k-baseline.sh'):
+    if '.git' in str(script):
+        continue
+    text = script.read_text()
     if 'mockfs fixture linked' in text:
-        print("Already patched")
+        print(f"Already patched: {script}")
+        found += 1
+        continue
+    if needle in text:
+        text = text.replace(needle, insert, 1)
+        script.write_text(text)
+        print(f"PATCHED OK: {script}")
+        found += 1
     else:
-        print("PATTERN NOT FOUND")
-        sys.exit(1)
+        print(f"PATTERN NOT FOUND in: {script}")
+
+if found == 0:
+    print("ERROR: no build-xnu-4k-baseline.sh found or patched")
+    sys.exit(1)
+print(f"Patched {found} copy(ies)")
