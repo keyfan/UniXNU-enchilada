@@ -4,20 +4,7 @@
 # Run from the CI workspace root before "./unixnu build kernel".
 set -euo pipefail
 
-STUB_DIR="out/build/mockfs-stubs"
-mkdir -p "$STUB_DIR"
-
-# 1. Compile the stubs
-cat > "$STUB_DIR/mockfs-stubs.c" << 'CEOF'
-__attribute__((used)) const void *mockfs_vfsops[20] = { 0 };
-__attribute__((used)) int mockfs_mountroot(void) { return 45; }
-__attribute__((used)) const struct { const void *p; const char *n; unsigned o; } mockfs_vnodeop_opv_desc = { 0, "mockfs_disabled", 0 };
-CEOF
-clang -c -O2 -target arm64-apple-macos "$STUB_DIR/mockfs-stubs.c" -o "$STUB_DIR/mockfs-stubs.o"
-xcrun ar rcs "$STUB_DIR/libmockfs_stubs.a" "$STUB_DIR/mockfs-stubs.o"
-echo "mockfs stubs archive built"
-
-# 2. Find and patch build-xnu-4k-baseline.sh
+# 1. Find the build script and derive $ROOT from it
 SCRIPT=""
 for candidate in \
     "$(find .cache -name 'build-xnu-4k-baseline.sh' 2>/dev/null | head -1)" \
@@ -25,14 +12,31 @@ for candidate in \
     [ -n "$candidate" ] && SCRIPT="$candidate" && break
 done
 [ -z "$SCRIPT" ] && echo "ERROR: build-xnu-4k-baseline.sh not found" && exit 1
-echo "Patching: $SCRIPT"
+echo "Build script: $SCRIPT"
 
+# Derive ROOT the same way the build script does
+ROOT=$(cd "$(dirname "$SCRIPT")/.." && pwd)
+echo "ROOT: $ROOT"
+
+# 2. Build stub archive at $ROOT/build/mockfs-stubs/
+STUB_DIR="$ROOT/build/mockfs-stubs"
+mkdir -p "$STUB_DIR"
+
+cat > "$STUB_DIR/mockfs-stubs.c" << 'CEOF'
+__attribute__((used)) const void *mockfs_vfsops[20] = { 0 };
+__attribute__((used)) int mockfs_mountroot(void) { return 45; }
+__attribute__((used)) const struct { const void *p; const char *n; unsigned o; } mockfs_vnodeop_opv_desc = { 0, "mockfs_disabled", 0 };
+CEOF
+clang -c -O2 -target arm64-apple-macos "$STUB_DIR/mockfs-stubs.c" -o "$STUB_DIR/mockfs-stubs.o"
+xcrun ar rcs "$STUB_DIR/libmockfs_stubs.a" "$STUB_DIR/mockfs-stubs.o"
+echo "mockfs stubs archive built at $STUB_DIR/libmockfs_stubs.a"
+
+# 3. Patch build-xnu-4k-baseline.sh: add stub-linking else-branch
 if grep -q 'MOCKFS_STUBS' "$SCRIPT"; then
     echo "Already patched, skipping"
     exit 0
 fi
 
-# 3. Insert the stub-linking else-branch after the MOCKFS_MODE=1 block
 python3 - "$SCRIPT" << 'PYEOF'
 import sys
 path = sys.argv[1]
