@@ -8,7 +8,6 @@ CONFIG_XNU_SOURCE_PTHREAD=y
 CONFIG_XNU_ARM_DT_PLATFORM=y
 CONFIG_XNU_ARMCPU=y
 # CONFIG_XNU_NATIVE_UFS=y            # P6: 需 VerifiedRoot + BootProgress kit + 存储基类原始绑定整链
-CONFIG_XNU_NATIVE_AES=y
 # CONFIG_XNU_NATIVE_VIRTIO_BLOCK=y     # P6: 需 pre_build 的 storage ABI 鉴定（interface-audit.json）
 # CONFIG_XNU_NATIVE_RAM_BLOCK=y        # P6: 同上（Data seed 稀疏块驱动）
 CONFIG_XNU_TRUST_CACHE_RUNTIME=y
