@@ -53,6 +53,7 @@ archives = [
   "build-enchilada-stubs.py",
   # "build-enchilada-platform-power.py",   # P6: SDM845 PMGR, required for native-ufs-root=1
   "build-libpthread-kernel.py",
+  "build-sheng-platform-power.py",
   # P6+（payload/Data seed 需要；build-native-virtio-bindings 依赖 pre_build 产出的
   # build/storage-abi/interface-audit.json，见 unixnu.com/building 的 pre_build 节）:
   # "build-arm-driver.py NativeVirtioBlock",
@@ -60,7 +61,6 @@ archives = [
   # "build-native-virtio-bindings.py --component NativeRamBlock --directory build/native-ram-block",
   # "build-native-virtio-bindings.py --component NativeVirtioBlock",
   # P7/P8（需 kits/enchilada + GMU 固件）:
-  "build-boot-progress.py",
   # "build-arm-driver.py NativeAdreno",
   # "build-native-adreno-kits.py",
   # "build-native-adreno-accelerator.py",
