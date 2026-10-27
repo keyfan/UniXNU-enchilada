@@ -60,7 +60,7 @@ archives = [
   # "build-native-virtio-bindings.py --component NativeRamBlock --directory build/native-ram-block",
   # "build-native-virtio-bindings.py --component NativeVirtioBlock",
   # P7/P8（需 kits/enchilada + GMU 固件）:
-  # "build-boot-progress.py",
+  "build-boot-progress.py",
   # "build-arm-driver.py NativeAdreno",
   # "build-native-adreno-kits.py",
   # "build-native-adreno-accelerator.py",
