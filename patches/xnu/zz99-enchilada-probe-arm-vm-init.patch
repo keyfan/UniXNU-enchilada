@@ -1,10 +1,9 @@
 --- a/osfmk/arm/arm_init.c
 +++ b/osfmk/arm/arm_init.c
-@@ -529,7 +529,9 @@
+@@ -529,7 +529,8 @@
  	__builtin_arm_wsr("pan", 1);
  #endif  /* __ARM_PAN_AVAILABLE__ */
  
-+	*(volatile unsigned int *)0x9D400000 = 0xFF00FF00; /* PROBE: before arm_vm_init */
  	arm_vm_init(xmaxmem, args);
 +	*(volatile unsigned int *)0x9D400100 = 0xFFFFFF00; /* PROBE: after arm_vm_init */
  
